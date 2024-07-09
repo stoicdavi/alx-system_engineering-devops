@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# A script that uses a while loop to print a string 10 times
 python3 -c '
 i = 0
 while i < 10:
