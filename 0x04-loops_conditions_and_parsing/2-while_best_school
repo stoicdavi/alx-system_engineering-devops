@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+python3 -c '
+i = 0
+while i < 10:
+	print("Best School")
+	i += 1
+'
