@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# displays the conted of the file /etc/passwd
+# Display name, userid and home dir path for the user.
+while read -r passwd; do
+  echo "$passwd" | cut -d ':' -f1,3,6
+done < "/etc/passwd"
