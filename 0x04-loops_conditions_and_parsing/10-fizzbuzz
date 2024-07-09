@@ -3,7 +3,7 @@
 # fizzBuzz when a multiple of 3 & 5
 # fizz when a multiple of 3
 # Buzz when a multiple of 5
-count=0
+count=1
 while [ $count -lt 100 ]
 do
 
