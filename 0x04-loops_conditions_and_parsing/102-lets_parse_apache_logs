@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# script that displays specific fields from the Apache access log
+
+log="apache-access.log"
+awk '{print $1 " " $9}' "$log"
