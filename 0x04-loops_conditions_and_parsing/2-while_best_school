@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # A script that uses a while loop to print a string 10 times
-python3 -c '
-i = 0
-while i < 10:
-	print("Best School")
-	i += 1
-'
+i=0
+while [ $i -lt 10 ]
+do
+	echo "Best School"
+	(( i++))
+done
