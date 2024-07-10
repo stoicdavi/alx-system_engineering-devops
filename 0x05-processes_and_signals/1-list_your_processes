@@ -2,4 +2,4 @@
 # Display all the current running process
 # For all user including those who might not have a TTY
 # in user-oriented format in hierachy
-top -b -n 1
+ps aux --forest
