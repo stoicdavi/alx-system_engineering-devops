@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # prints To infinity and beyond indefinitely
-i=0
-while [ $i ]
+
+while true
 do
 echo "To infinity and beyond"
 done
