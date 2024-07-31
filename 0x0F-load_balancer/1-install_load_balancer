@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# install load balancer
+
+
+echo -e "Updating and doing some minor checks...\n"
+
+function install() {
+        command -v "$1" &> /dev/null
+
+        #shellcheck disable=SC2181
+        if [ $? -ne 0 ]; then
+                echo -e "       Installing: $1\n"
+                sudo apt-get update -y -qq && \
+                        sudo apt-get install -y "$1" -qq
+                echo -e "\n"
+        else
+                echo -e "       ${1} is already installed.\n"
+        fi
+}
+
+install haproxy #install haproxy
+
+echo -e "\nSetting up some minor stuff.\n"
+
+# backup default server config file
+sudo cp /etc/haproxy/haproxy.cfg haproxy_default.backup
+
+server_config=\
+"
+defaults
+  mode http
+  timeout client 15s
+  timeout connect 10s
+  timeout server 15s
+  timeout http-request 10s
+
+frontend kinyuru-tech-frontend
+    bind *:80
+    default_backend kinyuru-tech-backend
+
+backend kinyuru-tech-backend
+    balance roundrobin
+    server 13272-web-01 54.146.74.212:80 check
+    server 13272-web-02 52.91.125.169:80 check
+"
+
+# shellcheck disable=SC2154
+echo "$server_config" | sudo dd status=none of=/etc/haproxy/haproxy.cfg
+
+# enable haproxy to be started by init script
+echo "ENABLED=1" | sudo dd status=none of=/etc/default/haproxy
+
+echo "configured - Roundrobin On web-01 & web-02"
+
+if [ "$(pgrep -c haproxy)" -le 0 ]; then
+        sudo service haproxy start
+else
+        sudo service haproxy restart
+fi
+
+echo -e "web-01 web-02"#!/usr/bin/env bash
+### Installs HAproxy 2.0, uses roundrobin algo, managed via init script
+
+frontend_setup="frontend www\n\tbind *:80\n\tmode http\n\tdefault_backend holberton_backend" 
+backend_setup="backend holberton_backend\n\tbalance roundrobin\n\tserver 977-web-01 35.243.219.137:80 check\n\tserver 977-web-02 35.237.245.133:80 check"
+
+apt-get install software-properties-common -y
+add-apt-repository ppa:vbernat/haproxy-2.0 -y
+apt-get update -y
+apt-get install haproxy=2.0.\* -y
+# Copies default config just in case :)
+sudo cp haproxy.cfg haproxy.cfg.orig
+
+echo "ENABLED=1" >> /etc/default/haproxy
+sudo sed -i "$ a $frontend_setup" /etc/haproxy/haproxy.cfg
+sudo sed -i "$ a $backend_setup" /etc/haproxy/haproxy.cfg
+
+sudo service haproxy restart
